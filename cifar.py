@@ -43,6 +43,7 @@ from torch import optim
 from torchvision.models import resnet18
 from torchvision.models import convnext_tiny
 import torch.nn as nn
+from torch.utils.tensorboard import SummaryWriter
 
 parser = argparse.ArgumentParser(
     description='Trains a CIFAR Classifier',
@@ -394,7 +395,6 @@ def main():
   # Distribute model across all visible GPUs
   net = torch.nn.DataParallel(net).cuda()
   cudnn.benchmark = True
-
   start_epoch = 0
 
   if args.resume:
@@ -437,13 +437,19 @@ def main():
     f.write('epoch,time(s),train_loss,test_loss,test_error(%)\n')
 
   best_acc = 0
+  writer = SummaryWriter(args.save)
   print('Beginning training from epoch:', start_epoch + 1)
   for epoch in range(start_epoch, args.epochs):
     begin_time = time.time()
 
     train_loss_ema = train(net, train_loader, optimizer, scheduler)
     test_loss, test_acc = test(net, test_loader)
-
+    #individual summary
+    writer.add_scalar('Train_loss/epochs',train_loss_ema, epoch)
+    writer.add_scalar('Test_loss/epochs',test_loss, epoch)
+    writer.add_scalar('Test_acc/epochs',test_acc, epoch)
+    #train and test loss summary
+    write.add_scalars('Losses',{'Train_loss':train_loss_ema, 'Test_loss':test_loss, epoch}
     is_best = test_acc > best_acc
     best_acc = max(test_acc, best_acc)
     checkpoint = {
@@ -474,7 +480,7 @@ def main():
         ' Test Error {4:.2f}'
         .format((epoch + 1), int(time.time() - begin_time), train_loss_ema,
                 test_loss, 100 - 100. * test_acc))
-
+  writer.close()
   test_c_acc = test_c(net, test_data, base_c_path)
   print('Mean Corruption Error: {:.3f}'.format(100 - 100. * test_c_acc))
 
