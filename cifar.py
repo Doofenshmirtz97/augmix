@@ -416,7 +416,7 @@ def main():
     print('Mean Corruption Error: {:.3f}'.format(100 - 100. * test_c_acc))
     return
 
-  if args.scheduler == 'LambdaLR':
+  if args.lrscheduler == 'LambdaLR':
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lr_lambda=lambda step: get_lr(  # pylint: disable=g-long-lambda
@@ -424,7 +424,7 @@ def main():
             args.epochs * len(train_loader),
             1,  # lr_lambda computes multiplicative factor
             1e-6 / args.learning_rate))
-  elif args.scheduler == 'CosineAnnealingLR':
+  elif args.lrscheduler == 'CosineAnnealingLR':
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs * len(train_loader))
   if not os.path.exists(args.save):
     os.makedirs(args.save)
@@ -449,7 +449,8 @@ def main():
     writer.add_scalar('Test_loss/epochs',test_loss, epoch)
     writer.add_scalar('Test_acc/epochs',test_acc, epoch)
     #train and test loss summary
-    write.add_scalars('Losses',{'Train_loss':train_loss_ema, 'Test_loss':test_loss, epoch}
+    write.add_scalars('Losses',{'Train_loss':train_loss_ema, 'Test_loss':test_loss}, epoch)
+
     is_best = test_acc > best_acc
     best_acc = max(test_acc, best_acc)
     checkpoint = {
