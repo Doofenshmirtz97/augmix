@@ -39,6 +39,10 @@ import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 from torchvision import datasets
 from torchvision import transforms
+from torch import optim
+from torchvision.models import resnet18
+from torchvision.models import convnext_tiny
+import torch.nn as nn
 
 parser = argparse.ArgumentParser(
     description='Trains a CIFAR Classifier',
@@ -54,17 +58,40 @@ parser.add_argument(
     '-m',
     type=str,
     default='wrn',
-    choices=['wrn', 'allconv', 'densenet', 'resnext'],
+    choices=['wrn', 'allconv', 'densenet', 'resnext','resnet18','convnext_tiny'],
     help='Choose architecture.')
+#Select a pretrained model:
+parser.add_argument(
+    '--pretrained',
+    '-pt',
+    action='store_true',
+    help='Selecting a pretrained model')
 # Optimization options
 parser.add_argument(
     '--epochs', '-e', type=int, default=100, help='Number of epochs to train.')
+#Select Optimizer
+parser.add_argument(
+    '--optimizer',
+    '-optim',
+    type=str,
+    default='SGD',
+    choices=['SGD','AdamW'],
+    help='Select optimizer:AdamW or SGD')
+
 parser.add_argument(
     '--learning-rate',
     '-lr',
     type=float,
     default=0.1,
     help='Initial learning rate.')
+#Learning rate scheduler
+parser.add_argument(
+    '--lrscheduler',
+    '-lrsc',
+    type=str,
+    default='LambdaLR',
+    choices=['LambdaLR','CosineAnnealingLR'],
+    help='Select a LR scheduler: LambdaLR or CosineAnnealingLR')
 parser.add_argument(
     '--batch-size', '-b', type=int, default=128, help='Batch size.')
 parser.add_argument('--eval-batch-size', type=int, default=1000)
@@ -244,7 +271,6 @@ def train(net, train_loader, optimizer, scheduler):
 
   return loss_ema
 
-
 def test(net, test_loader):
   """Evaluate network on given dataset."""
   net.eval()
@@ -329,6 +355,8 @@ def main():
       num_workers=args.num_workers,
       pin_memory=True)
 
+
+
   # Create model
   if args.model == 'densenet':
     net = densenet(num_classes=num_classes)
@@ -338,13 +366,30 @@ def main():
     net = AllConvNet(num_classes)
   elif args.model == 'resnext':
     net = resnext29(num_classes=num_classes)
-
-  optimizer = torch.optim.SGD(
+  elif args.model == 'resnet18':
+    if args.pretrained: 
+      net = resnet18(pretrained = args.pretrained)
+      net.fc = nn.Linear(512,num_classes)
+    else:
+      net = resnet18(num_classes)
+  elif args.model == 'convnext_tiny':
+    if args.pretrained:
+      net = convnext_tiny(pretrained = args.pretrained)
+      net.classifier[2] = nn.Linear(net.classifier[2].in_features, num_classes)
+    else:
+      net = convnext_tiny(num_classes)
+  if args.optimizer == 'SGD':
+    optimizer = torch.optim.SGD(
+        net.parameters(),
+        args.learning_rate,
+        momentum=args.momentum,
+        weight_decay=args.decay,
+        nesterov=True)
+  elif args.optimizer == 'AdamW':
+    optimizer = torch.optim.AdamW(
       net.parameters(),
       args.learning_rate,
-      momentum=args.momentum,
-      weight_decay=args.decay,
-      nesterov=True)
+      weight_decay=args.decay)
 
   # Distribute model across all visible GPUs
   net = torch.nn.DataParallel(net).cuda()
@@ -371,14 +416,16 @@ def main():
     print('Mean Corruption Error: {:.3f}'.format(100 - 100. * test_c_acc))
     return
 
-  scheduler = torch.optim.lr_scheduler.LambdaLR(
-      optimizer,
-      lr_lambda=lambda step: get_lr(  # pylint: disable=g-long-lambda
-          step,
-          args.epochs * len(train_loader),
-          1,  # lr_lambda computes multiplicative factor
-          1e-6 / args.learning_rate))
-
+  if args.scheduler == 'LambdaLR':
+    scheduler = torch.optim.lr_scheduler.LambdaLR(
+        optimizer,
+        lr_lambda=lambda step: get_lr(  # pylint: disable=g-long-lambda
+            step,
+            args.epochs * len(train_loader),
+            1,  # lr_lambda computes multiplicative factor
+            1e-6 / args.learning_rate))
+  elif args.scheduler == 'CosineAnnealingLR':
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs * len(train_loader))
   if not os.path.exists(args.save):
     os.makedirs(args.save)
   if not os.path.isdir(args.save):
