@@ -83,7 +83,7 @@ parser.add_argument(
     '--learning-rate',
     '-lr',
     type=float,
-    default=0.1,
+    default=0.0001,
     help='Initial learning rate.')
 #Learning rate scheduler
 parser.add_argument(
@@ -101,14 +101,14 @@ parser.add_argument(
     '--decay',
     '-wd',
     type=float,
-    default=0.0005,
+    default=5e-6,
     help='Weight decay (L2 penalty).')
 # WRN Architecture options
 parser.add_argument(
     '--layers', default=40, type=int, help='total number of layers')
 parser.add_argument('--widen-factor', default=2, type=int, help='Widen factor')
 parser.add_argument(
-    '--droprate', default=0.0, type=float, help='Dropout probability')
+    '--droprate', default=0.25, type=float, help='Dropout probability')
 # AugMix options
 parser.add_argument(
     '--mixture-width',
@@ -140,7 +140,7 @@ parser.add_argument(
     '--save',
     '-s',
     type=str,
-    default='./snapshots',
+    default='./resnet18/sgdpt',
     help='Folder to save checkpoints.')
 parser.add_argument(
     '--resume',
@@ -370,7 +370,7 @@ def main():
   elif args.model == 'resnet18':
     if args.pretrained: 
       net = resnet18(pretrained = args.pretrained)
-      net.fc = nn.Linear(512,num_classes)
+      net.fc = nn.Linear(net.fc.in_features, num_classes)
     else:
       net = resnet18(num_classes)
   elif args.model == 'convnext_tiny':
@@ -379,6 +379,8 @@ def main():
       net.classifier[2] = nn.Linear(net.classifier[2].in_features, num_classes)
     else:
       net = convnext_tiny(num_classes)
+
+
   if args.optimizer == 'SGD':
     optimizer = torch.optim.SGD(
         net.parameters(),
@@ -389,7 +391,7 @@ def main():
   elif args.optimizer == 'AdamW':
     optimizer = torch.optim.AdamW(
       net.parameters(),
-      args.learning_rate,
+      lr = args.learning_rate,
       weight_decay=args.decay)
 
   # Distribute model across all visible GPUs
@@ -449,7 +451,7 @@ def main():
     writer.add_scalar('Test_loss/epochs',test_loss, epoch)
     writer.add_scalar('Test_acc/epochs',test_acc, epoch)
     #train and test loss summary
-    write.add_scalars('Losses',{'Train_loss':train_loss_ema, 'Test_loss':test_loss}, epoch)
+    writer.add_scalars('Losses',{'Train_loss':train_loss_ema, 'Test_loss':test_loss}, epoch)
 
     is_best = test_acc > best_acc
     best_acc = max(test_acc, best_acc)
