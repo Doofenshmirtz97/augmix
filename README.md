@@ -67,7 +67,7 @@ training and evaluation on CIFAR-10/100-C and ImageNet-C.
 The Jensen-Shannon Divergence loss term may be disabled for faster training at the cost of slightly lower performance by adding the flag `--no-jsd`.
 
 Training recipes used in this experiment:
-
+ ```
 python cifar.py -m resnet18 -pt -lrsc CosineAnnealingLR -optim AdamW -s ./resnet18/adam_pt
 python cifar.py -m convnext_tiny -lrsc CosineAnnealingLR -optim AdamW -s ./convnext_tiny/adam_npt
 python cifar.py -m convnext_tiny -pt -lrsc CosineAnnealingLR -optim AdamW -s ./convnext_tiny/adam_pt
@@ -76,8 +76,7 @@ python cifar.py -m convnext_tiny -pt -lrsc LambdaLR -optim SGD -s ./convnext_tin
 python cifar.py -m resnet18 -lrsc LambdaLR -optim SGD -s ./resnet18/sgdnpt
 python cifar.py -m resnet18 -pt -lrsc LambdaLR -optim SGD
 python cifar.py -m resnet18 -lrsc CosineAnnealingLR -optim AdamW -s ./resnet18/adam_npt
-
-
+ ```
 ## Citation
 
 If you find this useful for your work, please consider citing
