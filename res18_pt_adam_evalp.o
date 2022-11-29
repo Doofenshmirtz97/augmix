@@ -1,0 +1,46 @@
+/home/g050878/.conda/envs/augmixenv Environment Directory
+# conda environments:
+#
+base                     /cm/shared/omni/apps/miniconda3
+augmixenv             *  /home/g050878/.conda/envs/augmixenv
+
+{'batch_size': 128, 'dataset': 'cifar10', 'decay': 0.0005, 'droprate': 0.0, 'epochs': 100, 'layers': 40, 'learning_rate': 0.1, 'load': '/home/g050878/augmix/resnet18/sgdnpt', 'model': 'resnet18', 'momentum': 0.9, 'ngpu': 1, 'prefetch': 2, 'pretrained': True, 'resume': './resnet18/adam_pt', 'save': './resnet18', 'test': False, 'test_bs': 200, 'widen_factor': 2}
+{'batch_size': 128, 'dataset': 'cifar10', 'decay': 0.0005, 'droprate': 0.0, 'epochs': 100, 'layers': 40, 'learning_rate': 0.1, 'load': '/home/g050878/augmix/resnet18/sgdnpt', 'model': 'resnet18', 'momentum': 0.9, 'ngpu': 1, 'prefetch': 2, 'pretrained': True, 'resume': './resnet18/adam_pt', 'save': './resnet18', 'test': False, 'test_bs': 200, 'widen_factor': 2}
+/home/g050878/.conda/envs/augmixenv/lib/python3.7/site-packages/torchvision/models/_utils.py:209: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  f"The parameter '{pretrained_param}' is deprecated since 0.13 and may be removed in the future, "
+/home/g050878/.conda/envs/augmixenv/lib/python3.7/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Error 90.92
+
+gaussian_noise Flipping Prob
+0.12295666666666627
+
+shot_noise Flipping Prob
+0.16204333333333062
+
+motion_blur Flipping Prob
+0.12767500000000193
+
+zoom_blur Flipping Prob
+0.015409999999999308
+
+spatter Flipping Prob
+0.08342333333333411
+
+brightness Flipping Prob
+0.031026666666667157
+
+translate Flipping Prob
+0.20124666666667199
+
+rotate Flipping Prob
+0.1638199999999964
+
+tilt Flipping Prob
+0.062273333333336255
+
+scale Flipping Prob
+0.09574999999999888
+[0.12295666666666627, 0.16204333333333062, 0.12767500000000193, 0.015409999999999308, 0.08342333333333411, 0.031026666666667157, 0.20124666666667199, 0.1638199999999964, 0.062273333333336255, 0.09574999999999888]
+
+Mean Flipping Prob	0.10656

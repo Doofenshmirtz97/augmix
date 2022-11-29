@@ -1,0 +1,46 @@
+/home/g050878/.conda/envs/augmixenv Environment Directory
+# conda environments:
+#
+base                     /cm/shared/omni/apps/miniconda3
+augmixenv             *  /home/g050878/.conda/envs/augmixenv
+
+{'batch_size': 128, 'dataset': 'cifar10', 'decay': 0.0005, 'droprate': 0.0, 'epochs': 100, 'layers': 40, 'learning_rate': 0.1, 'load': '/home/g050878/augmix/resnet18/sgdnpt', 'model': 'convnext_tiny', 'momentum': 0.9, 'ngpu': 1, 'prefetch': 2, 'pretrained': False, 'resume': './convnext_tiny/sgd_npt', 'save': './resnet18', 'test': False, 'test_bs': 200, 'widen_factor': 2}
+{'batch_size': 128, 'dataset': 'cifar10', 'decay': 0.0005, 'droprate': 0.0, 'epochs': 100, 'layers': 40, 'learning_rate': 0.1, 'load': '/home/g050878/augmix/resnet18/sgdnpt', 'model': 'convnext_tiny', 'momentum': 0.9, 'ngpu': 1, 'prefetch': 2, 'pretrained': False, 'resume': './convnext_tiny/sgd_npt', 'save': './resnet18', 'test': False, 'test_bs': 200, 'widen_factor': 2}
+/home/g050878/.conda/envs/augmixenv/lib/python3.7/site-packages/torchvision/models/_utils.py:136: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  f"Using {sequence_to_str(tuple(keyword_only_kwargs.keys()), separate_last='and ')} as positional "
+/home/g050878/.conda/envs/augmixenv/lib/python3.7/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ConvNeXt_Tiny_Weights.IMAGENET1K_V1`. You can also use `weights=ConvNeXt_Tiny_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Error 100.0
+
+gaussian_noise Flipping Prob
+0.8933868344627253
+
+shot_noise Flipping Prob
+0.8936158438205871
+
+motion_blur Flipping Prob
+0.9034582658408756
+
+zoom_blur Flipping Prob
+0.9045006453694718
+
+spatter Flipping Prob
+0.902383736689253
+
+brightness Flipping Prob
+0.9046414327202261
+
+translate Flipping Prob
+0.9050593495935099
+
+rotate Flipping Prob
+0.9038194901581126
+
+tilt Flipping Prob
+0.904036172959013
+
+scale Flipping Prob
+0.9041799935462959
+[0.8933868344627253, 0.8936158438205871, 0.9034582658408756, 0.9045006453694718, 0.902383736689253, 0.9046414327202261, 0.9050593495935099, 0.9038194901581126, 0.904036172959013, 0.9041799935462959]
+
+Mean Flipping Prob	0.90191
