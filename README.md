@@ -77,6 +77,9 @@ python cifar.py -m resnet18 -lrsc LambdaLR -optim SGD -s ./resnet18/sgdnpt
 python cifar.py -m resnet18 -pt -lrsc LambdaLR -optim SGD
 python cifar.py -m resnet18 -lrsc CosineAnnealingLR -optim AdamW -s ./resnet18/adam_npt
  ```
+ ## Results:
+ Mean Flip Probability (mFP): Flip probability across 10 different perturbation types
+ Mean Corruption Error (mCE): Corruption error across 15 different corruption types
 
  | Models        | Optimizer | Pretrained | mCE | mFP | 
  |:-------------:| :---------:| :---------:| :--:|:---:|
