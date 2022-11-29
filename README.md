@@ -77,6 +77,18 @@ python cifar.py -m resnet18 -lrsc LambdaLR -optim SGD -s ./resnet18/sgdnpt
 python cifar.py -m resnet18 -pt -lrsc LambdaLR -optim SGD
 python cifar.py -m resnet18 -lrsc CosineAnnealingLR -optim AdamW -s ./resnet18/adam_npt
  ```
+  ```
+ | Models | Optimizer | Pretrained | mCE | mFP | 
+ |:------:| :---------:| :---------:| :--:|:---:|
+ | Resnet_18 | AdamW | False | 18,090 | 0,899 | 
+ | Resnet_18 | AdamW | True | 18,236 | 0,106 |
+ | Resnet_18 | SGD | False | 30,640 | 0,899 |
+ | Resnet_18 | SGD | True | 30,245 | 0,106 |
+ | ConvNext_tiny | AdamW | False | 12,769 | 0,901 |
+ | ConvNext_tiny | AdamW | True | 12,595 | 0,215 |
+ | ConvNext_tiny | SGD | False | 25,016 | 0,901 |
+ | ConvNext_tiny | SGD | True | 18.719 | 0,215 |
+  ```
 ## Citation
 
 If you find this useful for your work, please consider citing
