@@ -38,7 +38,7 @@ training and evaluation on CIFAR-10/100-C and ImageNet-C.
 *   numpy>=1.15.0
 *   Pillow>=6.1.0
 *   torch==1.2.0
-*   torchvision==0.2.2
+*   torchvision==0.14
 
 ## Setup
 
@@ -56,44 +56,27 @@ training and evaluation on CIFAR-10/100-C and ImageNet-C.
     curl -O https://zenodo.org/record/3555552/files/CIFAR-100-C.tar
     tar -xvf CIFAR-100-C.tar -C data/cifar/
     tar -xvf CIFAR-10-C.tar -C data/cifar/
+    curl -O https://zenodo.org/record/2535967/files/CIFAR-10-P
+    tar -xvf CIFAR-100-C.tar -C data/cifar/
     ```
 
-3.  Download ImageNet-C with:
 
-    ```
-    mkdir -p ./data/imagenet/imagenet-c
-    curl -O https://zenodo.org/record/2235448/files/blur.tar
-    curl -O https://zenodo.org/record/2235448/files/digital.tar
-    curl -O https://zenodo.org/record/2235448/files/noise.tar
-    curl -O https://zenodo.org/record/2235448/files/weather.tar
-    tar -xvf blur.tar -C data/imagenet/imagenet-c
-    tar -xvf digital.tar -C data/imagenet/imagenet-c
-    tar -xvf noise.tar -C data/imagenet/imagenet-c
-    tar -xvf weather.tar -C data/imagenet/imagenet-c
-    ```
 
 ## Usage
 
 The Jensen-Shannon Divergence loss term may be disabled for faster training at the cost of slightly lower performance by adding the flag `--no-jsd`.
 
-Training recipes used in our paper:
+Training recipes used in this experiment:
 
-WRN: `python cifar.py`
+python cifar.py -m resnet18 -pt -lrsc CosineAnnealingLR -optim AdamW -s ./resnet18/adam_pt
+python cifar.py -m convnext_tiny -lrsc CosineAnnealingLR -optim AdamW -s ./convnext_tiny/adam_npt
+python cifar.py -m convnext_tiny -pt -lrsc CosineAnnealingLR -optim AdamW -s ./convnext_tiny/adam_pt
+python cifar.py -m convnext_tiny -lrsc LambdaLR -optim SGD -s ./convnext_tiny/sgd_npt
+python cifar.py -m convnext_tiny -pt -lrsc LambdaLR -optim SGD -s ./convnext_tiny/sgd_pt
+python cifar.py -m resnet18 -lrsc LambdaLR -optim SGD -s ./resnet18/sgdnpt
+python cifar.py -m resnet18 -pt -lrsc LambdaLR -optim SGD
+python cifar.py -m resnet18 -lrsc CosineAnnealingLR -optim AdamW -s ./resnet18/adam_npt
 
-AllConv: `python cifar.py -m allconv`
-
-ResNeXt: `python cifar.py -m resnext -e 200`
-
-DenseNet: `python cifar.py -m densenet -e 200 -wd 0.0001`
-
-ResNet-50: `python imagenet.py <path/to/imagenet> <path/to/imagenet-c>`
-
-## Pretrained weights
-
-Weights for a ResNet-50 ImageNet classifier trained with AugMix for 180 epochs are available
-[here](https://drive.google.com/file/d/1z-1V3rdFiwqSECz7Wkmn4VJVefJGJGiF/view?usp=sharing).
-
-This model has a 65.3 mean Corruption Error (mCE) and a 77.53% top-1 accuracy on clean ImageNet data.
 
 ## Citation
 
